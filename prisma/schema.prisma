@@ -1,0 +1,71 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+enum Role {
+    admin
+    customer
+}
+
+enum Gender {
+    male
+    female
+    other
+}
+
+model User {
+    id        String  @id @default(cuid())
+    name      String
+    email     String  @unique
+    password  String?
+    user_type Role
+    gender    Gender?
+    orders    Order[]
+
+    @@map("user")
+}
+
+model Book {
+    id             String       @id @default(cuid())
+    title          String
+    author         String
+    price          Float
+    inStock        Boolean     
+    published_year Int
+    destribution   String
+    genre          String?
+    description    String?
+    imageUrl       String
+    orderItems     OrderItems[]
+
+    @@map("book")
+}
+
+model Order {
+    id         String       @id @default(cuid())
+    user       User         @relation(fields: [userId], references: [id])
+    userId     String
+    amount     Float
+    createAt   DateTime     @default(now())
+    status     String       @default("pending")
+    orderItems OrderItems[]
+
+    @@map("order")
+}
+
+model OrderItems {
+    id       String @id @default(cuid())
+    order    Order  @relation(fields: [orderId], references: [id])
+    orderId  String
+    book     Book   @relation(fields: [bookId], references: [id])
+    bookId   String
+    quantity Int
+    price    Float
+
+    @@map("orderItem")
+}
