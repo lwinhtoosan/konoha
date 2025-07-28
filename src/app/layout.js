@@ -5,6 +5,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import NavBar from "./components/NavBar";
 import AuthProvider from "./components/AuthProvider";
+import { CartProvider } from "./components/CartContext";
 
 const theme = createTheme();
 
@@ -14,9 +15,11 @@ export default function RootLayout({ children }) {
       <body>
         <ThemeProvider theme={theme}>
           <AuthProvider>
-            <CssBaseline />
-            <NavBar />
-            {children}
+            <CartProvider>
+              <CssBaseline />
+              <NavBar />
+              {children}
+            </CartProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>
