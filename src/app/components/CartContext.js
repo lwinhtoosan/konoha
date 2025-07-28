@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const CartContext = createContext();
@@ -24,7 +25,7 @@ export const CartProvider = ({ children }) => {
       if (existing) {
         return prevCart.map((item) =>
           item.id === book.id
-            ? { ...book, quantity: item.quantity + quantity }
+            ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
@@ -52,12 +53,48 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  //total price
+  const totalPrice = cart.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+
   //Total items for navBar badge
   const totalQuantity = cart.reduce((acc, item) => acc + item.quantity, 0);
 
+  //Place order
+  const placeOrder = async () => {
+    if (cart.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    try {
+      const orderData = {
+        items: cart,
+        amount: totalPrice,
+      };
+      const res = await axios.post("/api/order", orderData);
+
+      setCart([]);
+      alert("Place order successful.");
+    } catch (error) {
+      console.log(error);
+      alert("Placing order failed.");
+    }
+  };
+
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateQuantity, totalQuantity }}
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        totalQuantity,
+        placeOrder,
+        totalPrice,
+      }}
     >
       {children}
     </CartContext.Provider>

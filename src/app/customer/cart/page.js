@@ -15,7 +15,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useCart } from "@/app/components/CartContext";
 export default function CartPage() {
-  const { updateQuantity, removeFromCart, cart } = useCart();
+  const { updateQuantity, removeFromCart, cart , placeOrder, totalPrice} = useCart();
 
   // useEffect(() => {
   //   const stored = localStorage.getItem("cart");
@@ -39,11 +39,7 @@ export default function CartPage() {
   //   window.dispatchEvent(new Event("UpdatedCart"));
   // };
 
-  const totalPrice = cart.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
-
+  
   return (
     <Box mt={10} p={2}>
       <Typography variant="h4">Your Cart</Typography>
@@ -97,7 +93,10 @@ export default function CartPage() {
             </Card>
           ))}
           <Divider />
-          <Typography variant="h6">Total : {totalPrice} MMK</Typography>
+          <Box display={"flex"} alignItems={"center"} justifyContent={"space-around"}>
+            <Typography variant="h6">Total : {totalPrice} MMK</Typography>
+            <Button variant="contained" onClick={() => placeOrder(amount)}>Place order</Button>
+          </Box>
         </Stack>
       )}
     </Box>

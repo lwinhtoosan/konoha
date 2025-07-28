@@ -180,7 +180,7 @@ export default function BookDetails() {
             Add to cart:
           </Typography>
 
-          <Button onClick={() => addToCart(book)}>
+          <Button onClick={() => addToCart(book, quantity)} >
             <ShoppingCartIcon />
           </Button>
         </CardActions>
